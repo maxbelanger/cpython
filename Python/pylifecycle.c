@@ -17,6 +17,10 @@
 #include "osdefs.h"
 #include <locale.h>
 
+#if defined(__APPLE__)
+#include <mach-o/loader.h>
+#endif
+
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
 #endif
@@ -73,6 +77,29 @@ extern void _Py_ReadyTypes(void);
 
 extern void _PyGILState_Init(PyInterpreterState *, PyThreadState *);
 extern void _PyGILState_Fini(void);
+
+/* Places the `_PyRuntime` structure in a location that can be found without any
+   external information. This is meant to ease access to the interpreter state
+   for various runtime debugging tools. */
+
+#if defined(MS_WINDOWS)
+
+#pragma section("PyRuntime", read, write)
+__declspec(allocate("PyRuntime"))
+
+#elif defined(__APPLE__)
+
+__attribute__((
+    section(SEG_DATA ",_PyRuntime")
+))
+
+#elif defined(__linux__)
+
+__attribute__((
+    section("_PyRuntime")
+))
+
+#endif
 
 _PyRuntimeState _PyRuntime = _PyRuntimeState_INIT;
 
