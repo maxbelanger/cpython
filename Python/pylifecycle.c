@@ -95,12 +95,6 @@ __attribute__((
     section(SEG_DATA ",_PyRuntime")
 ))
 
-#elif defined(__linux__)
-
-__attribute__((
-    section("_PyRuntime")
-))
-
 #endif
 
 _PyRuntimeState _PyRuntime = _PyRuntimeState_INIT;
