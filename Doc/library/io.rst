@@ -799,7 +799,7 @@ Text I/O
 
       .. versionadded:: 3.1
 
-   .. method:: read(size)
+   .. method:: read(size=-1)
 
       Read and return at most *size* characters from the stream as a single
       :class:`str`.  If *size* is negative or ``None``, reads until EOF.
@@ -889,7 +889,7 @@ Text I/O
      characters written are translated to the given string.
 
    If *line_buffering* is ``True``, :meth:`flush` is implied when a call to
-   write contains a newline character.
+   write contains a newline character or a carriage return.
 
    If *write_through* is ``True``, calls to :meth:`write` are guaranteed
    not to be buffered: any data written on the :class:`TextIOWrapper`
@@ -904,7 +904,7 @@ Text I/O
       locale encoding using :func:`locale.setlocale`, use the current locale
       encoding instead of the user preferred encoding.
 
-   :class:`TextIOWrapper` provides one attribute in addition to those of
+   :class:`TextIOWrapper` provides these members in addition to those of
    :class:`TextIOBase` and its parents:
 
    .. attribute:: line_buffering
@@ -918,11 +918,19 @@ Text I/O
 
       .. versionadded:: 3.7
 
-   .. method:: reconfigure(*, line_buffering=None, write_through=None)
+   .. method:: reconfigure(*[, encoding][, errors][, newline][, \
+                           line_buffering][, write_through])
 
-      Reconfigure this text stream using new settings for *line_buffering*
-      and *write_through*.  Passing ``None`` as an argument will retain
-      the current setting for that parameter.
+      Reconfigure this text stream using new settings for *encoding*,
+      *errors*, *newline*, *line_buffering* and *write_through*.
+
+      Parameters not specified keep current settings, except
+      ``errors='strict`` is used when *encoding* is specified but
+      *errors* is not specified.
+
+      It is not possible to change the encoding or newline if some data
+      has already been read from the stream. On the other hand, changing
+      encoding after write is possible.
 
       This method does an implicit stream flush before setting the
       new parameters.
