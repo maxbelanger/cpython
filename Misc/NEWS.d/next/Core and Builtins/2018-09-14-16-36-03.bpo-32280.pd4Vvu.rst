@@ -1,0 +1,3 @@
+Place the ``_PyRuntime`` structure in a location that can be found without
+any external information. This simplifies access to interpreter state by
+runtime debugging tools.
